@@ -2,6 +2,7 @@ package com.example.convidados
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.example.convidados.databinding.ActivityGuestFormBinding
@@ -21,6 +22,9 @@ class GuestFormActivity : AppCompatActivity(), View.OnClickListener{
 
         binding.btnSave.setOnClickListener(this)
         binding.radioPresente.isChecked = true
+
+        val chave = intent.getStringExtra("chave")
+        Log.d("debug", "logDaChave: ${chave}")
 
     }
 

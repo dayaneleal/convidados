@@ -1,6 +1,7 @@
 package com.example.convidados.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +28,10 @@ class AllGuestsFragment : Fragment() {
 
         _binding = FragmentAllGuestsBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        viewModel.teste({
+            Log.d("debug", it)
+        })
 
         val textView: TextView = binding.textHome
         viewModel.text.observe(viewLifecycleOwner) {

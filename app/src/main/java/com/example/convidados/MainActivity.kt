@@ -26,8 +26,9 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.appBarMain.toolbar)
 
         binding.appBarMain.fab.setOnClickListener {
-            view ->
-            startActivity(Intent(applicationContext, GuestFormActivity::class.java))
+            val intent = Intent(applicationContext, GuestFormActivity::class.java)
+            intent.putExtra("chave", "valor")
+            startActivity(intent)
         }
         setUpNavigation()
     }
