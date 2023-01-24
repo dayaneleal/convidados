@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.example.convidados.model.GuestModel
 import com.example.convidados.R
@@ -15,6 +16,8 @@ class GuestFormActivity : AppCompatActivity(), View.OnClickListener{
 
     private lateinit var binding : ActivityGuestFormBinding
     private lateinit var  viewModel: GuestFormViewModel
+
+    private var guestId = 0
 
     companion object {
         const val TAG = "LifeCycle"
@@ -32,9 +35,9 @@ class GuestFormActivity : AppCompatActivity(), View.OnClickListener{
         binding.btnSave.setOnClickListener(this)
         binding.radioPresente.isChecked = true
 
+        observe()
+
         loadData()
-
-
     }
 
     override fun onStart() {
@@ -67,8 +70,32 @@ class GuestFormActivity : AppCompatActivity(), View.OnClickListener{
             val name = binding.edtName.text.toString()
             val presence = binding.radioPresente.isChecked
 
-            val model = GuestModel(0, name, presence)
-            viewModel.insert(model)
+            val model = GuestModel().apply {
+                this.id = guestId
+                this.name = name
+                this.presenca = presence
+            }
+
+            viewModel.save(model)
+        }
+    }
+
+    private fun observe() {
+        viewModel.guest.observe(this) {
+            binding.edtName.setText(it.name)
+
+            if (it.presenca) {
+                binding.radioPresente.isChecked = true
+            } else {
+                binding.radioAusente.isChecked = true
+            }
+        }
+
+        viewModel.saveGuest.observe(this) {
+            if (it.success) {
+                Toast.makeText(applicationContext, it.message, Toast.LENGTH_SHORT ).show()
+                finish()
+            }
         }
     }
 
@@ -76,7 +103,7 @@ class GuestFormActivity : AppCompatActivity(), View.OnClickListener{
         val bundle = intent.extras
 
         if (bundle != null){
-            val guestId = bundle.getInt(DataBaseConstants.GUEST.ID)
+            guestId = bundle.getInt(DataBaseConstants.GUEST.ID)
             viewModel.get(guestId)
         }
 

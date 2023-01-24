@@ -7,28 +7,42 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.convidados.model.GuestModel
+import com.example.convidados.model.SuccessFailure
 import com.example.convidados.repository.GuestRepository
 
 class GuestFormViewModel(application: Application) : AndroidViewModel(application) {
 
-        private val repository = GuestRepository.getInstance(application)
+    private val repository = GuestRepository(application)
 
-        init {
-                Log.d("LifeCycle", "init: ")
+    private val guestModel = MutableLiveData<GuestModel>()
+    var guest: LiveData<GuestModel> = guestModel
+
+    private val _saveGuest = MutableLiveData<SuccessFailure>()
+    var saveGuest: LiveData<SuccessFailure> = _saveGuest
+
+    init {
+        Log.d("LifeCycle", "init: ")
+    }
+
+    override fun onCleared() {
+        Log.d("LifeCycle", "onCleared: ")
+        super.onCleared()
+    }
+
+    fun save(guest: GuestModel) {
+        var successFailure = SuccessFailure(true, "")
+        if (guest.id == 0) {
+            successFailure.success = repository.insert(guest)
+            successFailure.message = "Inserido com sucesso"
+        } else {
+            successFailure.success = repository.update(guest)
+            successFailure.message = "Atualizado com sucesso"
         }
 
-        override fun onCleared() {
-                Log.d("LifeCycle", "onCleared: ")
-                super.onCleared()
-        }
-        private val guestModel = MutableLiveData<GuestModel>()
-        val guest: LiveData<GuestModel> = guestModel
+        _saveGuest.value = successFailure
+    }
 
-        fun insert(guest: GuestModel){
-                repository.insert(guest)
-        }
-
-        fun get(id : Int) {
-                repository.get(id)
-        }
+    fun get(id: Int) {
+        guestModel.value = repository.get(id)
+    }
 }
