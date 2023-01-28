@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,7 +24,7 @@ class PresentFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var viewModel: GuestsViewModel
-    private val adapter = GuestsAdapter()
+    private val adapter = GuestsAdapter(::onEditClick)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -76,8 +77,18 @@ class PresentFragment : Fragment() {
     }
 
     private fun observe() {
-        viewModel.guests.observe(viewLifecycleOwner) {
+        viewModel.guestsLiveData.observe(viewLifecycleOwner) {
             adapter.updateGuests(it)
         }
+    }
+
+    fun onEditClick(id: Int){
+        Toast.makeText(context, "Fui clicado - ID: ${id}", Toast.LENGTH_SHORT).show()
+        val intent = Intent(context, GuestFormActivity::class.java)
+
+        val bundle = Bundle()
+        bundle.putInt(DataBaseConstants.GUEST.ID, id)
+        intent.putExtras(bundle)
+        startActivity(intent)
     }
 }

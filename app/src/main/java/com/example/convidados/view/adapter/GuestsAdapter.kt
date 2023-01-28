@@ -8,7 +8,7 @@ import com.example.convidados.model.GuestModel
 import com.example.convidados.view.listener.OnGuestListener
 import com.example.convidados.view.viewHolder.GuestViewHolder
 
-class GuestsAdapter : RecyclerView.Adapter<GuestViewHolder>() {
+class GuestsAdapter(val onEditClick:(Int) -> Unit) : RecyclerView.Adapter<GuestViewHolder>() {
 
     private var guestList: List<GuestModel> = listOf()
     private lateinit var listener: OnGuestListener
@@ -16,7 +16,7 @@ class GuestsAdapter : RecyclerView.Adapter<GuestViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GuestViewHolder {
         //Instancio o Layout
         val item = RowGuestBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return GuestViewHolder(item, listener)
+        return GuestViewHolder(item, listener, onEditClick)
     }
 
     override fun onBindViewHolder(holder: GuestViewHolder, position: Int) {

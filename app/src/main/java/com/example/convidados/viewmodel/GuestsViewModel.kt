@@ -12,19 +12,19 @@ class GuestsViewModel(application: Application) : AndroidViewModel(application) 
     private val repository : GuestRepository =
         GuestRepository(application.applicationContext)
 
-    private val listAllGuests = MutableLiveData<List<GuestModel>>()
-    val guests: LiveData<List<GuestModel>> = listAllGuests
+    private val _guestsLiveData = MutableLiveData<List<GuestModel>>()
+    val guestsLiveData: LiveData<List<GuestModel>> = _guestsLiveData
 
     fun getAll() {
-        listAllGuests.value = repository.getAll()
+        _guestsLiveData.value = repository.getAll()
     }
 
     fun getAbsent() {
-        listAllGuests.value = repository.getAbsent()
+        _guestsLiveData.value = repository.getAbsent()
     }
 
     fun getPresent() {
-        listAllGuests.value = repository.getPresent()
+        _guestsLiveData.value = repository.getPresent()
     }
 
     fun delete(id: Int){
